@@ -51,10 +51,10 @@ public class FontUtil {
         }
     }
 
-    public static void registerAllFonts(String fontsDir) {
+    public static void registerAllFonts(String fontsDir, Class mainClass) {
         try {
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            final File jarFile = new File(FontUtil.class.getProtectionDomain()
+            final File jarFile = new File(mainClass.getProtectionDomain()
                     .getCodeSource().getLocation().toURI().getPath());
             if (FileUtil.isJarFile(jarFile)) {
                 if (fontsDir.startsWith("/"))
