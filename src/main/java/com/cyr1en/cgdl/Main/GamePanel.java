@@ -1,6 +1,6 @@
 package com.cyr1en.cgdl.Main;
 
-import com.cyr1en.cgdl.Handlers.GameStateManager;
+import com.cyr1en.cgdl.GameState.GameStateManager;
 import com.cyr1en.cgdl.Handlers.Keys;
 import com.cyr1en.cgdl.Handlers.Mouse;
 
@@ -10,7 +10,7 @@ import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
 /**
- * Main Component of the game. All game processes are passed to this class.
+ * com.cyr1en.cgdl.Main Component of the game. All game processes are passed to this class.
  *
  * @author Ethan Bacurio (CyR1en)
  * @version 1.0
@@ -29,23 +29,32 @@ public class GamePanel extends JPanel implements Runnable, KeyListener, MouseMot
     //threads
     private Thread thread;
     private boolean running;
-    private int FPS;
-    public static int currentFPS;
+    private int frameCount = 0;
+    private static int fps;
+    private double TARGET_FPS;
+    private static int GAME_TICK;
 
     //image
     private BufferedImage image;
     private Graphics2D g;
+
+    private GameFrame frame;
+    private boolean paused;
 
     /**
      * GamePanel constructor
      *
      * @param gameStateManager sets the game state manager that we need
      */
-    public GamePanel(GameStateManager gameStateManager, int FPS) {
+    public GamePanel(GameStateManager gameStateManager, int FPS, int tick, GameFrame frame) {
         super();
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         GamePanel.gameStateManager = gameStateManager;
-        this.FPS = FPS;
+        fps = FPS;
+        TARGET_FPS = fps;
+        this.frame = frame;
+        GAME_TICK = tick;
+        paused = false;
         System.out.println("GamePanel Initialized...");
     }
 
@@ -90,10 +99,22 @@ public class GamePanel extends JPanel implements Runnable, KeyListener, MouseMot
         running = true;
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         g = (Graphics2D) image.getGraphics();
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+    }
+
+    @Override
+    public void run() {
+        init();
+        Thread loop = new Thread(this::gameLoop);
+        loop.start();
+    }
+
+    public static int getFPS() {
+        return fps;
+    }
+    public static int getTPS() {
+        return GAME_TICK;
     }
 
     /**
@@ -107,42 +128,56 @@ public class GamePanel extends JPanel implements Runnable, KeyListener, MouseMot
      * <p>
      * Contains the game loop.
      */
-    public void run() {
-        init();
+    private void gameLoop() {
+        final double GAME_HERTZ = GAME_TICK;
+        final double TIME_BETWEEN_UPDATES = 1000000000 / GAME_HERTZ;
+        final int MAX_UPDATES_BEFORE_RENDER = 5;
+        final double TARGET_TIME_BETWEEN_RENDERS = 1000000000 / TARGET_FPS;
 
-        long fpsTimeElapsed;
-        long startTime;
-        long elapsed;
-        long waitTime;
+        double lastUpdateTime = System.nanoTime();
+        double lastRenderTime;
 
-        long targetTime = 1000 / FPS;
+        int lastSecondTime = (int) (lastUpdateTime / 1000000000);
 
-        long fpsTimerStart = System.nanoTime();
-        long frameCounter = 0;
+        int tps = 0;
 
         while (running) {
-            startTime = System.nanoTime();
+            double now = System.nanoTime();
+            int updateCount = 0;
 
-            gameUpdate();
-            gameRender();
-            gameDraw();
+            if (!paused) {
+                while (now - lastUpdateTime > TIME_BETWEEN_UPDATES && updateCount < MAX_UPDATES_BEFORE_RENDER) {
+                    gameUpdate();
+                    lastUpdateTime += TIME_BETWEEN_UPDATES;
+                    updateCount++;
+                    tps++;
+                }
+                if (now - lastUpdateTime > TIME_BETWEEN_UPDATES) {
+                    lastUpdateTime = now - TIME_BETWEEN_UPDATES;
+                }
 
-            elapsed = (System.nanoTime() - startTime) / 10000000;
+                float interpolation = Math.min(1.0f, (float) ((now - lastUpdateTime) / TIME_BETWEEN_UPDATES));
+                gameDraw(interpolation);
+                lastRenderTime = now;
+                frameCount++;
 
-            waitTime = targetTime - elapsed;
-            if (waitTime < 0)
-                waitTime = 5;
-            try {
-                Thread.sleep(waitTime);
-            } catch (Exception ignored) {
-            }
+                int thisSecond = (int) (lastUpdateTime / 1000000000);
+                if (thisSecond > lastSecondTime) {
+                    GAME_TICK = tps;
+                    fps = frameCount;
+                    frameCount = 0;
+                    tps = 0;
+                    lastSecondTime = thisSecond;
+                }
 
-            frameCounter++;
-            fpsTimeElapsed = (System.nanoTime() - fpsTimerStart) / 1000000;
-            if (fpsTimeElapsed >= 1000) {
-                currentFPS = (int) frameCounter;
-                frameCounter = 0;
-                fpsTimerStart = System.nanoTime();
+                while (now - lastRenderTime < TARGET_TIME_BETWEEN_RENDERS && now - lastUpdateTime < TIME_BETWEEN_UPDATES) {
+                    Thread.yield();
+                    try {
+                        Thread.sleep(1);
+                    } catch (Exception ignored) {
+                    }
+                    now = System.nanoTime();
+                }
             }
         }
     }
@@ -154,6 +189,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener, MouseMot
         gameStateManager.update();
         Keys.update();
         Mouse.update();
+        frame.updateTitleBar();
     }
 
     /**
@@ -161,14 +197,15 @@ public class GamePanel extends JPanel implements Runnable, KeyListener, MouseMot
      * <p>
      * rendering technique is double buffer
      */
-    private void gameRender() {
-        gameStateManager.draw(g);
+    private void gameRender(float interp) {
+        gameStateManager.draw(g, interp);
     }
 
     /**
      * Draw the rendered buffered image to the panel
      */
-    private void gameDraw() {
+    private void gameDraw(float interp) {
+        gameRender(interp);
         Graphics g2 = this.getGraphics();
         g2.drawImage(image, 0, 0, null);
         g2.dispose();

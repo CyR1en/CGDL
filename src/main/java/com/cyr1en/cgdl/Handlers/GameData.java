@@ -1,10 +1,6 @@
 package com.cyr1en.cgdl.Handlers;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.*;
 
 /**
  * Handles the game data of the game

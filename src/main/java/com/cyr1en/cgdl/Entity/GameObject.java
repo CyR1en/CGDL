@@ -7,6 +7,8 @@ public class GameObject {
     // position
     protected double x;
     protected double y;
+    protected double lastX;
+    protected double lastY;
 
     // vector
     protected double dx;

@@ -1,12 +1,13 @@
 package com.cyr1en.cgdl.Main;
 
-import com.cyr1en.cgdl.Handlers.GameStateManager;
+import com.cyr1en.cgdl.GameState.GameStateManager;
+import com.cyr1en.cgdl.util.ImageUtil;
 
 import javax.swing.*;
 import java.awt.*;
 
 /**
- * Main Component of the game. Where game components will be added
+ * com.cyr1en.cgdl.Main Component of the game. Where game components will be added
  *
  * @author  Ethan Bacurio (CyR1en)
  * @version 1.0
@@ -25,11 +26,11 @@ public class GameFrame extends JFrame {
      * @param title sets the title of the game.
      * @param gsm game state manager that will be initialized with the game panel.
      */
-    public GameFrame(String title, GameStateManager gsm, int FPS) {
+    public GameFrame(String title, GameStateManager gsm, int FPS, int tick) {
         super(title);
-        this.add(new GamePanel(gsm, FPS));
+        GamePanel gamePanel = new GamePanel(gsm, FPS, tick,this);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        this.setContentPane(new GamePanel(gsm, FPS));
+        this.setContentPane(gamePanel);
         this.setResizable(false);
         this.pack();
         this.setFocusable(true);
@@ -37,6 +38,7 @@ public class GameFrame extends JFrame {
         this.setVisible(true);
         showTitleInfo = false;
         this.title = title;
+        this.setIconImage(ImageUtil.loadBufferedImage("/assets/cgdl-frame-logo.png"));
         System.out.println("Frame Initialized...");
     }
 
@@ -55,7 +57,7 @@ public class GameFrame extends JFrame {
             long total = Runtime.getRuntime().totalMemory() / mb;
             long free = Runtime.getRuntime().freeMemory() / mb;
             long used = total - free;
-            this.setTitle( title + " | Max: " + max + "mb Used: " + used + "mb" + " | FPS : " + GamePanel.currentFPS);
+            this.setTitle( title + " | Max: " + max + "mb Used: " + used + "mb" + " | FPS : " + GamePanel.getFPS() + " | TPS: " + GamePanel.getTPS());
         }
     }
 

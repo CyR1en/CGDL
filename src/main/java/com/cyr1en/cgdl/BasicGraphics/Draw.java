@@ -1,7 +1,6 @@
 package com.cyr1en.cgdl.BasicGraphics;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
 
 /**
  * Class the lets you easily draw shapes to your panel

@@ -1,8 +1,6 @@
 package com.cyr1en.cgdl.Entity;
 
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.*;
 
 /**
  * A 2D wave entity that can be spawned into the game
@@ -15,6 +13,7 @@ public class Wave extends Particle {
 
     /**
      * Wave constructor
+     *
      * @param x initial X coordinate of the particle
      * @param y initial Y coordinate of the particle
      * @param w maximum width of the wave
@@ -22,7 +21,7 @@ public class Wave extends Particle {
      */
     public Wave(double x, double y, int w, Color c) {
         this.x = x;
-        this. y = y;
+        this.y = y;
         this.width = this.height = w;
         this.color = c;
         tick = 0;
@@ -31,6 +30,7 @@ public class Wave extends Particle {
 
     /**
      * delay of the wave
+     *
      * @param i number of tick delay
      */
     public void setTickDelay(int i) {
@@ -39,6 +39,7 @@ public class Wave extends Particle {
 
     /**
      * update the wave's variables and properties
+     *
      * @return return if the particle tick is equal to the tickDelay
      */
     public boolean update() {
@@ -51,10 +52,12 @@ public class Wave extends Particle {
 
     /**
      * draws the wave
+     *
      * @param g Graphics2D component to paint the wave
      */
-    public void draw(Graphics2D g) {
+    public void draw(Graphics2D g, float interpolation) {
+        g.setColor(color);
         g.setStroke(new BasicStroke(2));
-        super.draw(g);
+        g.drawOval((int) x - width / 2, (int) y - height / 2, width, height);
     }
 }

@@ -1,8 +1,7 @@
 package com.cyr1en.cgdl.GameState;
 
-import com.cyr1en.cgdl.Handlers.GameStateManager;
-
 import java.awt.*;
+import java.io.Serializable;
 
 /**
  * Super class of all the states of the game
@@ -11,18 +10,20 @@ import java.awt.*;
  * @version 1.0
  * @since 2016-05-17
  */
-public abstract class GameState {
+public abstract class GameState implements Serializable {
 
     protected GameStateManager gsm;
+    protected float interpolation;
 
     /**
-     * constructor for the GameState
+     * constructor for the com.cyr1en.cgdl.GameState
      *
      * @param gsm the game state manager that's going to be used to
      *            handle the game states
      */
     public GameState(GameStateManager gsm) {
         this.gsm = gsm;
+        interpolation = 0;
     }
 
     /**
@@ -48,5 +49,9 @@ public abstract class GameState {
      * methods to handle all that inputs in this state
      */
     public abstract void handleInput();
+
+    public abstract void setInterpolation(float interpolation);
+
+    public abstract float getInterpolation();
 
 }

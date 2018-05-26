@@ -1,6 +1,5 @@
-package com.cyr1en.cgdl.Handlers;
+package com.cyr1en.cgdl.GameState;
 
-import com.cyr1en.cgdl.GameState.GameState;
 import com.cyr1en.cgdl.Main.GamePanel;
 
 import java.awt.*;
@@ -14,15 +13,22 @@ import java.awt.*;
  */
 public abstract class GameStateManager {
 
+    protected static final int INTRO_STATE = -1;
+
     protected GameState gameState;
     protected int currentState;
+
+    protected GameStateManager(int initialState) {
+        currentState = INTRO_STATE;
+        gameState = new IntroState(this, initialState);
+    }
 
     /**
      * to be implemented in the subclass. this class should
      * contain and handle the loading of states. needs to be
      * implemented correctly for maximum efficiency
      *
-     * @param state Specific state that you want to load.
+     * @param state Specific state that you want to loadBufferedImage.
      */
     public abstract void loadState(int state);
 
@@ -34,8 +40,6 @@ public abstract class GameStateManager {
     public void setState(int state) {
         currentState = state;
         loadState(currentState);
-
-
     }
 
     /**
@@ -50,9 +54,11 @@ public abstract class GameStateManager {
      * draw method takes care of graphics of each game state
      * @param g graphics component that's needed to paint something onto the screen
      */
-    public void draw(Graphics2D g) {
-        if(gameState != null)
+    public void draw(Graphics2D g, float interp) {
+        if(gameState != null) {
+            gameState.setInterpolation(interp);
             gameState.draw(g);
+        }
         else {
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT);
