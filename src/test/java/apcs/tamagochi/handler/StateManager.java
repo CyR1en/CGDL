@@ -1,6 +1,7 @@
 package apcs.tamagochi.handler;
 
 import apcs.tamagochi.states.MenuState;
+import com.cyr1en.cgdl.GameState.GameState;
 import com.cyr1en.cgdl.GameState.GameStateManager;
 
 /**
@@ -21,5 +22,24 @@ public class StateManager extends GameStateManager {
     public void loadState(int state) {
         if(state == MENU_STATE)
             gameState = new MenuState(this);
+    }
+
+    @Override
+    public void loadState(GameState state) {
+        gameState = state;
+    }
+
+    @Override
+    public GameState getState(int state) {
+        if(state == MENU_STATE)
+            return new MenuState(this);
+        return null;
+    }
+
+    @Override
+    public int getState(GameState state) {
+        if(state instanceof MenuState)
+            return MENU_STATE;
+        return -1;
     }
 }

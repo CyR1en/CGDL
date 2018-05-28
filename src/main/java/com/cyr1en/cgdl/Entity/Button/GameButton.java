@@ -184,7 +184,7 @@ public class GameButton<T> extends GameObject {
             playedHover =false;
         }
 
-        if(hover && Mouse.isPressed()) {
+        if(hover && Mouse.isPressed() && active) {
             click().process(consumer);
         }
     }
