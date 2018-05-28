@@ -22,8 +22,9 @@ public class SerializationUtil {
         }
     }
 
-    public static Object loadSerialized(String filePath) throws ClassNotFoundException, IOException {
-        FileInputStream fileIn = new FileInputStream(filePath);
+    public static Object deserialize(String filePath) throws ClassNotFoundException, IOException {
+        File file = new File(filePath);
+        FileInputStream fileIn = new FileInputStream(file);
         ObjectInputStream in = new ObjectInputStream(fileIn);
         return in.readObject();
     }
