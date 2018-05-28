@@ -16,7 +16,7 @@ public class Transition extends GameObject {
     private int fadeOutDelay;
     private int alpha;
 
-    private int nextState;
+    private GameState nextState;
 
     private boolean next;
 
@@ -26,10 +26,15 @@ public class Transition extends GameObject {
         this.fadeInDelay = fadeInDelay;
         this.fadeOutDelay = fadeOutDelay;
         this.fadeOutTimer = fadeOutTimer;
-        nextState = -1;
+        nextState = new IntroState(gsm, -1);
     }
 
     public void nextState(int state) {
+        nextState = gsm.getState(state);
+        next = true;
+    }
+
+    public void nextState(GameState state) {
         nextState = state;
         next = true;
     }

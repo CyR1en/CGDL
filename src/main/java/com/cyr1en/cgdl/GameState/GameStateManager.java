@@ -32,8 +32,15 @@ public abstract class GameStateManager {
      */
     public abstract void loadState(int state);
 
+    public abstract void loadState(GameState state);
+
+    public abstract GameState getState(int state);
+
+    public abstract int getState(GameState state);
+
+
     /**
-     *change the current game state of the game
+     * change the current game state of the game
      *
      * @param state Specific state that you want to set the current state.
      */
@@ -42,24 +49,29 @@ public abstract class GameStateManager {
         loadState(currentState);
     }
 
+    public void setState(GameState state) {
+        currentState = getState(state);
+        loadState(state);
+    }
+
     /**
      * updateBool method takes care of the code and variable changes in each game state.
      */
     public void update() {
-        if(gameState != null)
+        if (gameState != null)
             gameState.update();
     }
 
     /**
      * draw method takes care of graphics of each game state
+     *
      * @param g graphics component that's needed to paint something onto the screen
      */
     public void draw(Graphics2D g, float interp) {
-        if(gameState != null) {
+        if (gameState != null) {
             gameState.setInterpolation(interp);
             gameState.draw(g);
-        }
-        else {
+        } else {
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, GamePanel.WIDTH, GamePanel.HEIGHT);
         }
