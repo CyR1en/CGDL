@@ -1,7 +1,5 @@
 package com.cyr1en.cgdl.util;
 
-import com.sun.org.apache.bcel.internal.generic.ObjectType;
-
 import java.io.*;
 
 public class SerializationUtil {
@@ -24,9 +22,9 @@ public class SerializationUtil {
         }
     }
 
-    public static ObjectType loadSerialized(String filePath) throws ClassNotFoundException, IOException {
+    public static Object loadSerialized(String filePath) throws ClassNotFoundException, IOException {
         FileInputStream fileIn = new FileInputStream(filePath);
         ObjectInputStream in = new ObjectInputStream(fileIn);
-        return (ObjectType) in.readObject();
+        return in.readObject();
     }
 }

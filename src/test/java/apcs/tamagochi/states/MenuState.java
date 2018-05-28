@@ -56,7 +56,7 @@ public class MenuState extends GameState {
         newGameButton.setText("New Game ", new Font("KG Already Home", Font.PLAIN, 30));
         newGameButton.setHoverSound(new SoundEffect("/sounds/sfx/button-hover.wav"));
         newGameButton.setClickSound(new SoundEffect("/sounds/sfx/button-click.wav"));
-        newGameButton.setColor(GameButton.DEFAULT_COLOR);
+        newGameButton.setColor(new Color(255, 144, 34));
         newGameButton.setType(GameButton.CENTER);
         newGameButton.setObjType(this);
         newGameButton.setOnClick(state -> {

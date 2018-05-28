@@ -69,14 +69,14 @@ public class GameButton<T> extends GameObject {
         this.height = height;
         active = true;
         type = CENTER;
-        c = DEFAULT_COLOR;
+        this.color = DEFAULT_COLOR;
         hoverSound = null;
         clickSound = null;
         playedHover = false;
     }
 
     public void setColor(Color color) {
-        c = color;
+        this.color = color;
     }
 
     public void setActive(boolean b) {
@@ -191,13 +191,13 @@ public class GameButton<T> extends GameObject {
 
     public void draw(Graphics2D g, float interpolation) {
         if (active)
-            g.setColor(c);
+            g.setColor(color);
         else
             g.setColor(Color.GRAY);
         if (hover && active) {
             g.setStroke(new BasicStroke(2));
             if (type == CENTER) {
-                g.setColor(c.darker());
+                g.setColor(color.darker());
                 Font f = new Font(font.getName(), Font.BOLD, font.getSize() + 2);
                 g.setFont(f);
                 g.drawString(text, x - getPixelBounds(f).width / 2, y + 10);
@@ -216,7 +216,7 @@ public class GameButton<T> extends GameObject {
         }
 
         if (active)
-            g.setColor(c);
+            g.setColor(color);
         else
             g.setColor(Color.GRAY);
     }
