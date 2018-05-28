@@ -42,8 +42,6 @@ public class GameButton<T> extends GameObject {
     public static final int CENTER = 0;
     public static final int SHOP_BUTTON = 2;
 
-    private static Color c;
-
     private SoundEffect hoverSound;
     private boolean playedHover;
     private SoundEffect clickSound;
@@ -56,7 +54,7 @@ public class GameButton<T> extends GameObject {
         this.y = y;
         active = true;
         type = CENTER;
-        c = DEFAULT_COLOR;
+        this.color = DEFAULT_COLOR;
         hoverSound = null;
         clickSound = null;
         playedHover = false;
