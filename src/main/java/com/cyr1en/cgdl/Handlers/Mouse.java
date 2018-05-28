@@ -19,14 +19,14 @@ public class Mouse {
     public static final int PRESSED = 1;
 
     /**
-     * update and check the mouse input
+     * updateBool and check the mouse input
      */
     public static void update() {
         previousAction = action;
     }
 
     /**
-     * update the coordinate of x and y to the current position
+     * updateBool the coordinate of x and y to the current position
      * the mouse in the component
      *
      * @param i1 X coordinate of the mouse
@@ -38,7 +38,7 @@ public class Mouse {
     }
 
     /**
-     * sets and update the value of action
+     * sets and updateBool the value of action
      *
      * @param i new value for the instance action
      */

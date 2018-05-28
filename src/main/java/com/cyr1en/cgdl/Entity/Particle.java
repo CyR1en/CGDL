@@ -67,11 +67,11 @@ public class Particle extends GameObject {
     }
 
     /**
-     * update the variables and properties of the Particle
+     * updateBool the variables and properties of the Particle
      *
      * @return true if the tick is greater than the tick delay
      */
-    public boolean update() {
+    public boolean updateBool() {
         lastX = x;
         lastY = y;
         x += dx + Math.random() * 3 - 1.5;
@@ -80,8 +80,14 @@ public class Particle extends GameObject {
         else
             y += dy + Math.random() * 3 - 1.5;
         tick++;
-        color = new Color(color.getRed(), color.getGreen(), color.getBlue(), (255 - tick * 255 / tickDelay));
-        return tick >= tickDelay;
+        int alpha =  (255 - tick * 255 / tickDelay);
+        color = new Color(color.getRed(), color.getGreen(), color.getBlue(), alpha );
+        return alpha <= 0;
+    }
+
+    @Override
+    public void update() {
+
     }
 
     /**

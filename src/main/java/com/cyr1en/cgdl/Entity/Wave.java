@@ -38,11 +38,11 @@ public class Wave extends Particle {
     }
 
     /**
-     * update the wave's variables and properties
+     * updateBool the wave's variables and properties
      *
      * @return return if the particle tick is equal to the tickDelay
      */
-    public boolean update() {
+    public boolean updateBool() {
         width++;
         height++;
         tick++;

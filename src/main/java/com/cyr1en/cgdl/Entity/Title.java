@@ -30,7 +30,7 @@ public class Title extends GameObject {
         this.color = color;
     }
 
-    //update the title variables
+    //updateBool the title variables
     public void update() {
         lastY = y;
         dy = (targetY - y) / 20;

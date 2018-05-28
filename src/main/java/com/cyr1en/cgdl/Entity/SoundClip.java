@@ -25,19 +25,24 @@ public class SoundClip {
             // Open audio clip and loadBufferedImage samples from the audio input stream.
             clip.open(audioIn);
             volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-            volume.setValue(-30.f);
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Set the volume for the clip
+     * @param percent value can only be from 0.0 to 1.0
+     */
+    public void setVolume(float percent) {
+        if(percent < 0.0 || percent > 1.0)
+            return;
+        float dB = (float) (Math.log(percent) / Math.log(10.0) * 20.0);
+        volume.setValue(dB);
+    }
 
     public void start() {
         clip.loop(loop);
-    }
-
-    public boolean isRunning() {
-        return clip.isRunning();
     }
 
     public void stop() {

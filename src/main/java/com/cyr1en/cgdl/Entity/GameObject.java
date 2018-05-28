@@ -2,7 +2,7 @@ package com.cyr1en.cgdl.Entity;
 
 import java.awt.*;
 
-public class GameObject {
+public abstract class GameObject {
 
     // position
     protected double x;
@@ -130,4 +130,6 @@ public class GameObject {
         g.fillOval((int) x - width / 2, (int) y - height / 2, width, height);
     }
 
+    public abstract void update();
+    public abstract void draw(Graphics2D g, float interpolation);
 }

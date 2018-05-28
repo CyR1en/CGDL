@@ -43,7 +43,7 @@ public abstract class GameStateManager {
     }
 
     /**
-     * update method takes care of the code and variable changes in each game state.
+     * updateBool method takes care of the code and variable changes in each game state.
      */
     public void update() {
         if(gameState != null)
