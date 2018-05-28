@@ -151,7 +151,7 @@ public class GameButton<T> extends GameObject {
     }
 
     private ButtonAction<T> click() {
-        if(hoverSound != null)
+        if(clickSound != null)
             clickSound.play();
         return new ButtonAction<>(objType);
     }

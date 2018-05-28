@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * The background for the game
+ * Background object for states
  */
 public class BackGround {
 
@@ -24,22 +24,34 @@ public class BackGround {
     private double dx;
     private double dy;
 
-    //very straight forward constructor
+    /**
+     * Background constructor
+     *
+     * @param fileName image to use for the background
+     */
     public BackGround(String fileName) {
-        //used the ImageUtil class from the CGDL(thanks to ethan)
         image = ImageUtil.loadBufferedImage(fileName);
-        //initialize the coordinate of the BG to (0,0)
         x = 0;
         y = 0;
     }
 
-    //sets the vector
+    /**
+     * set the vector for the background
+     *
+     * @param dx horizontal velocity
+     * @param dy vertical velocity
+     */
     public void setVector(double dx, double dy) {
         this.dx = dx;
         this.dy = dy;
     }
 
-    //updates the background
+    /**
+     * Update the back ground
+     * <p>
+     * Call this on the update function of your {@link com.cyr1en.cgdl.GameState.GameState} GameState
+     * </p>
+     */
     public void update() {
         lastX = x;
         lastY = y;
@@ -55,10 +67,18 @@ public class BackGround {
         }
     }
 
-    //draws the background
+    /**
+     * Render function for the background object
+     *
+     * <p>
+     * Call this on the draw function of your {@link com.cyr1en.cgdl.GameState.GameState}.
+     * </p>
+     * @param g Graphics2D object that was passed down to the {@link com.cyr1en.cgdl.GameState.GameState} draw function.
+     * @param interpolation interpolation value that was passed down to the {@link com.cyr1en.cgdl.GameState.GameState} draw function.
+     */
     public void draw(Graphics2D g, float interpolation) {
-        int x = (int)((this.x - lastX) * interpolation + lastX);
-        int y = (int)((this.y - lastY) * interpolation + lastY);
+        int x = (int) ((this.x - lastX) * interpolation + lastX);
+        int y = (int) ((this.y - lastY) * interpolation + lastY);
         //center
         g.drawImage(image, x, y, null);
         //right
@@ -72,9 +92,9 @@ public class BackGround {
         //top-left
         //g.drawImage(image, x - image.getWidth(), y - image.getHeight(), null);
         //top-right
-       // g.drawImage(image, x + image.getWidth(), y - image.getHeight(), null);
+        // g.drawImage(image, x + image.getWidth(), y - image.getHeight(), null);
         //bottom-left
-       // g.drawImage(image, x - image.getWidth(), y + image.getHeight(), null);
+        // g.drawImage(image, x - image.getWidth(), y + image.getHeight(), null);
         //bottom-right
         //g.drawImage(image, x + image.getWidth(), y + image.getHeight(), null);
     }
