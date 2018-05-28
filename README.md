@@ -1,2 +1,2 @@
-# CGDL [![Release](https://jitpack.io/1.10-SNAPSHOT/CyR1en/cgdl.svg)](https://jitpack.io/CyR1en/Repo)
+# CGDL [![](https://jitpack.io/v/CyR1en/CGDL.svg)](https://jitpack.io/#CyR1en/CGDL)
 Mediocre Java game lib :)
