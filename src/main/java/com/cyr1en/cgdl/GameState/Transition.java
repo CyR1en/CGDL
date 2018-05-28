@@ -4,6 +4,7 @@ import com.cyr1en.cgdl.Entity.GameObject;
 import com.cyr1en.cgdl.Main.GamePanel;
 
 import java.awt.*;
+import java.util.function.Consumer;
 
 public class Transition extends GameObject {
 
@@ -17,6 +18,8 @@ public class Transition extends GameObject {
     private int alpha;
 
     private GameState nextState;
+
+    private Consumer<Transition> consumer;
 
     private boolean next;
 
@@ -53,7 +56,10 @@ public class Transition extends GameObject {
             fadeOutTimer++;
             alpha = (int) (255.0 * fadeOutTimer / fadeOutDelay);
             if (fadeOutTimer == fadeOutDelay) {
-                gsm.setState(nextState);
+                if(consumer != null)
+                    consumer.accept(this);
+                else
+                    gsm.setState(nextState);
                 next = false;
             }
         }
@@ -61,6 +67,10 @@ public class Transition extends GameObject {
             alpha = 0;
         if (alpha > 255)
             alpha = 255;
+    }
+
+    public void after(Consumer<Transition> consumer) {
+        this.consumer = consumer;
     }
 
     @Override
