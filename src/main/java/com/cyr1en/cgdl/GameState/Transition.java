@@ -38,6 +38,7 @@ public class Transition extends GameObject {
     }
 
     public void nextState(GameState state) {
+        System.out.println("called nextState");
         nextState = state;
         next = true;
     }
@@ -74,6 +75,7 @@ public class Transition extends GameObject {
     }
 
     public void after(Consumer<Transition> consumer) {
+        next = true;
         this.consumer = consumer;
     }
 

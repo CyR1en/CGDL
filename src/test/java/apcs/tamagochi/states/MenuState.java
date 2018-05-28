@@ -37,6 +37,10 @@ public class MenuState extends GameState {
 
     // initialize all the instance variables
     public void init() {
+        transition = new Transition(gsm ,0, 30, -100, 30);
+        transition.after(t -> {
+            t.nextState(new PlayingState(t.gsm));
+        });
         //initialize the background music
         backgroundMusic = new SoundClip("/sounds/bg-music2.wav", Clip.LOOP_CONTINUOUSLY);
         backgroundMusic.setVolume(0.15f);
@@ -77,7 +81,6 @@ public class MenuState extends GameState {
             transition.nextState(StateManager.MENU_STATE);
         });
 
-        transition = new Transition(gsm ,0, 30, -1, 30);
         particles = new ArrayList<>();
         ParticleFactory.init(particles);
         backgroundMusic.start();
@@ -85,6 +88,7 @@ public class MenuState extends GameState {
 
     //updateBool all the variables that's used in this class and other components of it
     public void update() {
+        transition.update();
         handleInput(); // handle the inputs
         bg.update(); // updateBool the background
         title.update(); // updateBool the title
@@ -98,7 +102,7 @@ public class MenuState extends GameState {
         // buttons
         newGameButton.update();
         loadGameButton.update();
-        transition.update();
+
     }
 
 

@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'com.cyr1en'
-version '1.11-SNAPSHOT'
+version '1.12-SNAPSHOT'
 
 sourceCompatibility = 1.8
 
