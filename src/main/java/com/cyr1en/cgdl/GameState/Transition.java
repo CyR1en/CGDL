@@ -60,7 +60,6 @@ public class Transition extends GameObject {
             alpha = (int) (255.0 * fadeOutTimer / fadeOutDelay);
             if (fadeOutTimer == fadeOutDelay) {
                 consumer.accept(this);
-                System.out.println("1 - transitioned");
             }
         }
 
@@ -69,7 +68,6 @@ public class Transition extends GameObject {
             alpha = (int) (255.0 * fadeOutTimer / fadeOutDelay);
             if (fadeOutTimer == fadeOutDelay) {
                 gsm.setState(nextState);
-                System.out.println("2 - transitioned");
                 next = false;
             }
 
