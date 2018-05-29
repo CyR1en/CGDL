@@ -30,6 +30,8 @@ public class Transition extends GameObject {
         this.fadeOutDelay = fadeOutDelay;
         this.fadeOutTimer = fadeOutTimer;
         nextState = new IntroState(gsm, -1);
+        next = false;
+        consumer = null;
     }
 
     public void nextState(int state) {
@@ -53,21 +55,26 @@ public class Transition extends GameObject {
             }
         }
 
-        if (next) {
+        if (consumer != null) {
             fadeOutTimer++;
             alpha = (int) (255.0 * fadeOutTimer / fadeOutDelay);
             if (fadeOutTimer == fadeOutDelay) {
-                if(consumer != null) {
-                    consumer.accept(this);
-                    System.out.println("1 - transitioned");
-                    next = false;
-                } else {
-                    gsm.setState(nextState);
-                    System.out.println("2 - transitioned");
-                    next = false;
-                }
+                consumer.accept(this);
+                System.out.println("1 - transitioned");
             }
         }
+
+        if (next && consumer == null) {
+            fadeOutTimer++;
+            alpha = (int) (255.0 * fadeOutTimer / fadeOutDelay);
+            if (fadeOutTimer == fadeOutDelay) {
+                gsm.setState(nextState);
+                System.out.println("2 - transitioned");
+                next = false;
+            }
+
+        }
+
         if (alpha < 0)
             alpha = 0;
         if (alpha > 255)
@@ -75,7 +82,6 @@ public class Transition extends GameObject {
     }
 
     public void after(Consumer<Transition> consumer) {
-        next = true;
         this.consumer = consumer;
     }
 

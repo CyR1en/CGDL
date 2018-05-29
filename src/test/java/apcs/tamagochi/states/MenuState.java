@@ -1,5 +1,6 @@
 package apcs.tamagochi.states;
 
+import apcs.tamagochi.handler.Loader;
 import apcs.tamagochi.handler.StateManager;
 import com.cyr1en.cgdl.Entity.*;
 import com.cyr1en.cgdl.Entity.Button.GameButton;
@@ -29,6 +30,8 @@ public class MenuState extends GameState {
     // particles
     private ArrayList<Particle> particles;
 
+    private Loader loader;
+
     // constructor
     public MenuState(GameStateManager gsm) {
         super(gsm);
@@ -37,12 +40,9 @@ public class MenuState extends GameState {
 
     // initialize all the instance variables
     public void init() {
-        transition = new Transition(gsm ,0, 30, -100, 30);
-        transition.after(t -> {
-            t.nextState(new PlayingState(t.gsm));
-        });
+        loader = new Loader();
         //initialize the background music
-        backgroundMusic = new SoundClip("/sounds/bg-music2.wav", Clip.LOOP_CONTINUOUSLY);
+        backgroundMusic = new SoundClip("/sounds/bg-music.wav", Clip.LOOP_CONTINUOUSLY);
         backgroundMusic.setVolume(0.15f);
 
         //initialize the title.
@@ -60,16 +60,18 @@ public class MenuState extends GameState {
         newGameButton.setText("New Game ", new Font("KG Already Home", Font.PLAIN, 30));
         newGameButton.setHoverSound(new SoundEffect("/sounds/sfx/button-hover.wav"));
         newGameButton.setClickSound(new SoundEffect("/sounds/sfx/button-click.wav"));
-        newGameButton.setColor(new Color(255, 144, 34));
+        newGameButton.setColor(GameButton.DEFAULT_COLOR);
         newGameButton.setType(GameButton.CENTER);
         newGameButton.setObjType(this);
         newGameButton.setOnClick(state -> {
             state.getBackgroundMusic().stop();
-            transition.nextState(StateManager.MENU_STATE);
+            transition.nextState(state.getStateManager().getState(StateManager.PLAYING_STATE));
         });
 
         //========= Button two =========
         loadGameButton = new GameButton<>(GamePanel.WIDTH / 2, (int) (GamePanel.HEIGHT * 0.6) + 50);
+        if(!loader.isSaveExist())
+            loadGameButton.setActive(false);
         loadGameButton.setText("Load Game", new Font("KG Already Home", Font.PLAIN, 30));
         loadGameButton.setHoverSound(new SoundEffect("/sounds/sfx/button-hover.wav"));
         loadGameButton.setClickSound(new SoundEffect("/sounds/sfx/button-click.wav"));
@@ -78,9 +80,10 @@ public class MenuState extends GameState {
         loadGameButton.setObjType(this);
         loadGameButton.setOnClick(state -> {
             state.getBackgroundMusic().stop();
-            transition.nextState(StateManager.MENU_STATE);
+            transition.nextState(state.getStateManager().getState(StateManager.LOAD_STATE));
         });
 
+        transition = new Transition(gsm ,0, 30, -1, 30);
         particles = new ArrayList<>();
         ParticleFactory.init(particles);
         backgroundMusic.start();
@@ -88,7 +91,6 @@ public class MenuState extends GameState {
 
     //updateBool all the variables that's used in this class and other components of it
     public void update() {
-        transition.update();
         handleInput(); // handle the inputs
         bg.update(); // updateBool the background
         title.update(); // updateBool the title
@@ -102,7 +104,7 @@ public class MenuState extends GameState {
         // buttons
         newGameButton.update();
         loadGameButton.update();
-
+        transition.update();
     }
 
 
@@ -122,6 +124,7 @@ public class MenuState extends GameState {
             p.draw(g, getInterpolation());
 
         transition.draw(g, getInterpolation());
+
     }
 
     public void handleInput() {
@@ -130,6 +133,10 @@ public class MenuState extends GameState {
             ParticleFactory.createSmallWave(Mouse.x, Mouse.y, 10, new Color(40, 40, 40));
             new SoundEffect("/sounds/sfx/pop.wav").play();
         }
+    }
+
+    public GameStateManager getStateManager() {
+        return gsm;
     }
 
     public SoundClip getBackgroundMusic() {
